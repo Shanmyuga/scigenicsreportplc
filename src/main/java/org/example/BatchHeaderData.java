@@ -21,6 +21,8 @@ public class BatchHeaderData {
         this.startDateTime = startDateTime;
     }
 
+
+
     public Timestamp getEndDateTime() {
         return endDateTime;
     }
@@ -54,4 +56,14 @@ public class BatchHeaderData {
     private String duration;
 
     private String processName;
+
+    private String batchStartedBy;
+
+    public String getBatchStartedBy() {
+        return batchStartedBy;
+    }
+
+    public void setBatchStartedBy(String batchStartedBy) {
+        this.batchStartedBy = batchStartedBy;
+    }
 }
