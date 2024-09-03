@@ -1,4 +1,4 @@
-package org.example;
+package com.msn.scigenics.report;
 
 
 import java.sql.Date;

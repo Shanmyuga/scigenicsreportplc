@@ -1,16 +1,13 @@
-package org.example;
+package com.msn.scigenics.report;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -22,8 +19,8 @@ import java.util.*;
  * Hello world!
  *
  */
-@SpringBootApplication
-public class App implements CommandLineRunner
+@Component
+public class ReportGenApp
 
 
 {
@@ -31,22 +28,18 @@ public class App implements CommandLineRunner
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public static void main( String[] args ) throws SQLException, ClassNotFoundException {
 
-        SpringApplication.run(App.class, args);
 
-    }
 
-    @Override
-    public void run(String... args) throws Exception {
+    public void run(String fermenter,String processType,String batchId) throws Exception {
         Properties props = new Properties();
-       props.load(this.getClass().getClassLoader().getResourceAsStream("report_params.properties"));
-        for(String key:props.stringPropertyNames()) {
-            System.out.println(key);
-            String[] paramsv1 = ((String)props.get(key)).split(" ");
-            String batchName = paramsv1[0];
+       props.load(this.getClass().getClassLoader().getResourceAsStream(fermenter+"_report_params.properties"));
+
+            System.out.println(processType);
+            String[] paramsv1 = ((String)props.get(processType)).split(" ");
+            String batchName = batchId;
             List<InputParams> keyParametersList = new ArrayList<InputParams>();
-            String fermeneterNo = paramsv1[1];
+            String fermeneterNo = fermenter;
             for (int idx = 2; idx < paramsv1.length; idx++) {
                 String[] array = StringUtils.delimitedListToStringArray(paramsv1[idx], ":");
                 InputParams params = new InputParams();
@@ -360,14 +353,14 @@ BatchActualValues actualValues1 = actualValues.get(actualValues.size()-1);
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
             mapper.setDateFormat(df);
             String jsonData = mapper.writeValueAsString(reportClass);
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(key+".json")));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("c:\\temp\\report\\"+batchId+"_"+processType+".json")));
             writer.write(jsonData);
             writer.flush();
             writer.close();
             //System.out.println(finaljson);
 
         }
-        }
+
 
 
 
